@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 func getXML(url string) ([]byte, error) {
@@ -28,15 +29,18 @@ func getXML(url string) ([]byte, error) {
 }
 
 func main() {
-	xmlBytes, err := getXML("http://data.bmkg.go.id/autogempa.xml")
+	xmlBytes, err := getXML("http://data.bmkg.go.id/gempaterkini.xml")
 
 	if err != nil {
 		log.Printf("Failed to get XML: %v", err)
-	} else {
-		var Earthquake Infogempa
-		xml.Unmarshal(xmlBytes, &Earthquake)
+		os.Exit(1)
+	}
 
-		// parsed earthquake
-		fmt.Println(Earthquake)
+	var Earthquakes EarthquakeList
+	xml.Unmarshal(xmlBytes, &Earthquakes)
+
+	// parsed earthquake
+	for _, earthquake := range Earthquakes.Gempa {
+		fmt.Println(earthquake)
 	}
 }
