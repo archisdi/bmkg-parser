@@ -17,7 +17,7 @@ func getXML(url string) ([]byte, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return []byte{}, fmt.Errorf("Status error: %v", resp.StatusCode)
+		return []byte{}, fmt.Errorf("status error: %v", resp.StatusCode)
 	}
 
 	data, err := ioutil.ReadAll(resp.Body)
@@ -37,7 +37,10 @@ func main() {
 	}
 
 	var Earthquakes EarthquakeList
-	xml.Unmarshal(xmlBytes, &Earthquakes)
+	if err := xml.Unmarshal(xmlBytes, &Earthquakes); err != nil {
+		log.Printf("Failed Parse Data: %v", err)
+		os.Exit(1)
+	}
 
 	// parsed earthquake
 	for _, earthquake := range Earthquakes.Gempa {
