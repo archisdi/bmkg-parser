@@ -1,49 +1,21 @@
 package main
 
 import (
-	"encoding/xml"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"os"
+	"bmkg/controllers"
+
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/mvc"
 )
 
-func getXML(url string) ([]byte, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return []byte{}, fmt.Errorf("GET error: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return []byte{}, fmt.Errorf("status error: %v", resp.StatusCode)
-	}
-
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return []byte{}, fmt.Errorf("Read body: %v", err)
-	}
-
-	return data, nil
+func setup(app *mvc.Application) {
+	app.Handle(new(controllers.EarthquakeController))
 }
 
 func main() {
-	xmlBytes, err := getXML("http://data.bmkg.go.id/gempaterkini.xml")
+	app := iris.New()
 
-	if err != nil {
-		log.Printf("Failed to get XML: %v", err)
-		os.Exit(1)
-	}
+	mvc.Configure(app.Party("/"), setup)
 
-	var Earthquakes EarthquakeList
-	if err := xml.Unmarshal(xmlBytes, &Earthquakes); err != nil {
-		log.Printf("Failed Parse Data: %v", err)
-		os.Exit(1)
-	}
+	app.Listen(":8080", iris.WithLogLevel("debug"))
 
-	// parsed earthquake
-	for _, earthquake := range Earthquakes.Gempa {
-		fmt.Println(earthquake)
-	}
 }
