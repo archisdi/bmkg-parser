@@ -13,8 +13,17 @@ type EarthquakeService struct {
 
 // RetrieveLastEarthquake ...
 func (s *EarthquakeService) RetrieveLastEarthquake() (models.Earthquake, error) {
-	earthquake, _ := s.repo.GetLastEarthquake()
-	return earthquake.Gempa.ToEarthquake(), nil
+	var earthquake models.Earthquake
+
+	if cacheEarthquake, ok, _ := s.cache.GetLastEarthquakeCache(); ok {
+		earthquake = cacheEarthquake
+	} else {
+		lastEarthquake, _ := s.repo.GetLastEarthquake()
+		earthquake = lastEarthquake.Gempa.ToEarthquake()
+		s.cache.SetLastEarthquakeCache(earthquake)
+	}
+
+	return earthquake, nil
 }
 
 // RetrieveLatestEarthquakes ...

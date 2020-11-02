@@ -1,15 +1,50 @@
 package modules
 
-import "github.com/go-redis/redis/v8"
+import (
+	"encoding/json"
+	"time"
+
+	"context"
+
+	"github.com/go-redis/redis/v8"
+)
+
+// RedisClient ...
+type RedisClient struct {
+	*redis.Client
+}
 
 // Redis ...
-var Redis *redis.Client
+var Redis RedisClient
 
 // InitializeRedis ...
 func InitializeRedis(host string, password string) {
-	Redis = redis.NewClient(&redis.Options{
+	client := redis.NewClient(&redis.Options{
 		Addr:     host,
 		Password: password,
 		DB:       0,
 	})
+
+	Redis = RedisClient{
+		client,
+	}
+}
+
+// SetCache ...
+func (c *RedisClient) SetCache(key string, value interface{}) error {
+	p, err := json.Marshal(value)
+
+	if err != nil {
+		return err
+	}
+
+	c.Set(context.TODO(), key, p, time.Minute)
+
+	return nil
+}
+
+// GetCache ...
+func (c *RedisClient) GetCache(key string, dest interface{}) error {
+	p := c.Get(context.TODO(), key)
+	return json.Unmarshal([]byte(p.Val()), dest)
 }
