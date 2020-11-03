@@ -28,6 +28,15 @@ func (s *EarthquakeService) RetrieveLastEarthquake() (models.Earthquake, error) 
 
 // RetrieveLatestEarthquakes ...
 func (s *EarthquakeService) RetrieveLatestEarthquakes() ([]models.Earthquake, error) {
-	earthquakes, _ := s.repo.GetLatestEarthquake()
-	return earthquakes.ToEarthquakeList(), nil
+	var earthquakes []models.Earthquake
+
+	if cacheEarthquakes, ok, _ := s.cache.GetLatestEarthquakeCache(); ok {
+		earthquakes = cacheEarthquakes
+	} else {
+		latestEarthquake, _ := s.repo.GetLatestEarthquake()
+		earthquakes = latestEarthquake.ToEarthquakeList()
+		s.cache.SetLatestEarthquakeCache(earthquakes)
+	}
+
+	return earthquakes, nil
 }
