@@ -18,9 +18,10 @@ type RedisClient struct {
 var Redis RedisClient
 
 // InitializeRedis ...
-func InitializeRedis(host string, password string) {
+func InitializeRedis(host string, username string, password string) {
 	client := redis.NewClient(&redis.Options{
 		Addr:     host,
+		Username: username,
 		Password: password,
 		DB:       0,
 	})
