@@ -67,10 +67,10 @@ func (e *baseXMLEarthquake) ToEarthquake() Earthquake {
 	parsedDate, _ := time.Parse("02-Jan-06 15:04:05 MST", e.Tanggal+" "+e.Jam)
 
 	splDepth := strings.Split(e.Kedalaman, " ")
-	depth, _ := strconv.ParseFloat(splDepth[0], 32)
+	depth, _ := strconv.ParseFloat(splDepth[0], 2)
 
 	splMag := strings.Split(e.Magnitude, " ")
-	magnitude, _ := strconv.ParseFloat(splMag[0], 32)
+	magnitude, _ := strconv.ParseFloat(splMag[0], 2)
 
 	coordinates := strings.Split(e.Point.Coordinates, ",")
 

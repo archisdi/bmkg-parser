@@ -5,24 +5,38 @@ import (
 	"bmkg/repositories"
 )
 
+func NewEarthquakeService(
+	repo repositories.EarthquakeRepositoryApi, cache repositories.CacheRepositoryApi) EarthquakeServiceApi {
+	return &EarthquakeService{
+		Repo: repo,
+		Cache: cache,
+	}
+}
+
+// EarthquakeServiceApi
+type EarthquakeServiceApi interface {
+	RetrieveLastEarthquake() (models.Earthquake, error)
+	RetrieveLatestEarthquakes() ([]models.Earthquake, error)
+}
+
 // EarthquakeService ...
 type EarthquakeService struct {
-	repo  repositories.EarthquakeRepository
-	cache repositories.CacheRepository
+	Repo  repositories.EarthquakeRepositoryApi
+	Cache repositories.CacheRepositoryApi
 }
 
 // RetrieveLastEarthquake ...
 func (s *EarthquakeService) RetrieveLastEarthquake() (models.Earthquake, error) {
 	var earthquake models.Earthquake
 
-	if cachedEarthquake, ok, _ := s.cache.GetLastEarthquakeCache(); ok {
+	if cachedEarthquake, ok, _ := s.Cache.GetLastEarthquakeCache(); ok {
 		return cachedEarthquake, nil
 	}
 
-	// if cache not found, retrieve from source and cache
-	lastEarthquake, _ := s.repo.GetLastEarthquake()
+	// if Cache not found, retrieve from source and Cache
+	lastEarthquake, _ := s.Repo.GetLastEarthquake()
 	earthquake = lastEarthquake.Gempa.ToEarthquake()
-	if err := s.cache.SetLastEarthquakeCache(earthquake); err != nil {
+	if err := s.Cache.SetLastEarthquakeCache(earthquake); err != nil {
 		return earthquake ,err
 	}
 
@@ -33,14 +47,14 @@ func (s *EarthquakeService) RetrieveLastEarthquake() (models.Earthquake, error) 
 func (s *EarthquakeService) RetrieveLatestEarthquakes() ([]models.Earthquake, error) {
 	var earthquakes []models.Earthquake
 
-	if cachedEarthquakes, ok, _ := s.cache.GetLatestEarthquakeCache(); ok {
+	if cachedEarthquakes, ok, _ := s.Cache.GetLatestEarthquakeCache(); ok {
 		return cachedEarthquakes, nil
 	}
 
-	// if cache not found, retrieve from source and cache
-	latestEarthquake, _ := s.repo.GetLatestEarthquake()
+	// if Cache not found, retrieve from source and Cache
+	latestEarthquake, _ := s.Repo.GetLatestEarthquake()
 	earthquakes = latestEarthquake.ToEarthquakeList()
-	if err := s.cache.SetLatestEarthquakeCache(earthquakes); err != nil {
+	if err := s.Cache.SetLatestEarthquakeCache(earthquakes); err != nil {
 		return earthquakes, err
 	}
 

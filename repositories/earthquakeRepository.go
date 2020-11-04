@@ -7,6 +7,17 @@ import (
 	"log"
 )
 
+// NewEarthquakeRepository ...
+func NewEarthquakeRepository() EarthquakeRepositoryApi {
+	return &EarthquakeRepository{}
+}
+
+// EarthquakeRepositoryApi ...
+type EarthquakeRepositoryApi interface {
+	GetLastEarthquake() (models.LastEartquake, error)
+	GetLatestEarthquake() (models.LatestEarthquake, error)
+}
+
 // EarthquakeRepository ...
 type EarthquakeRepository struct{}
 

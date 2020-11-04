@@ -9,17 +9,17 @@ import (
 
 // EarthquakeController ...
 type EarthquakeController struct {
-	service services.EarthquakeService
+	Service services.EarthquakeServiceApi
 }
 
 // GetEarthquakes ...
 func (c *EarthquakeController) GetEarthquakes() (models.Response, error) {
-	return c.service.RetrieveLatestEarthquakes()
+	return c.Service.RetrieveLatestEarthquakes()
 }
 
 // GetEarthquakesLast ...
 func (c *EarthquakeController) GetEarthquakesLast() (models.Response, error) {
-	return c.service.RetrieveLastEarthquake()
+	return c.Service.RetrieveLastEarthquake()
 }
 
 // GetEarthquakesLastGif ...

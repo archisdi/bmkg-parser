@@ -3,6 +3,8 @@ package main
 import (
 	"bmkg/controllers"
 	"bmkg/modules"
+	"bmkg/repositories"
+	"bmkg/services"
 	"log"
 	"os"
 
@@ -20,6 +22,12 @@ func initialize() {
 }
 
 func setupMvc(app *mvc.Application) {
+	app.Register(
+		services.NewEarthquakeService(
+			repositories.NewEarthquakeRepository(),
+			repositories.NewCacheRepository(),
+			),
+		)
 	app.Handle(new(controllers.EarthquakeController))
 }
 

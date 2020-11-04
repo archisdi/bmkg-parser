@@ -5,6 +5,19 @@ import (
 	"bmkg/modules"
 )
 
+// NewCacheRepository ...
+func NewCacheRepository() CacheRepositoryApi {
+	return &CacheRepository{}
+}
+
+// CacheRepositoryApi ...
+type CacheRepositoryApi interface {
+	GetLastEarthquakeCache() (models.Earthquake, bool, error)
+	SetLastEarthquakeCache(earthquake models.Earthquake) error
+	GetLatestEarthquakeCache() ([]models.Earthquake, bool, error)
+	SetLatestEarthquakeCache(earthquakes []models.Earthquake) error
+}
+
 // CacheRepository ...
 type CacheRepository struct{}
 
