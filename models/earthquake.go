@@ -49,7 +49,7 @@ type LatestEarthquake struct {
 
 // ToEarthquakeList ...
 func (e *LatestEarthquake) ToEarthquakeList() []Earthquake {
-	earthquakes := []Earthquake{}
+	var earthquakes []Earthquake
 
 	for _, earthquake := range e.Gempa {
 		earthquakes = append(earthquakes, earthquake.ToEarthquake())
@@ -59,7 +59,7 @@ func (e *LatestEarthquake) ToEarthquakeList() []Earthquake {
 }
 
 func (e baseXMLEarthquake) String() string {
-	return ("coordinates: " + e.Point.Coordinates + "; magnitude: " + e.Kedalaman + "; time: " + e.Tanggal + " " + e.Jam)
+	return "coordinates: " + e.Point.Coordinates + "; magnitude: " + e.Kedalaman + "; time: " + e.Tanggal + " " + e.Jam
 }
 
 func (e *baseXMLEarthquake) ToEarthquake() Earthquake {

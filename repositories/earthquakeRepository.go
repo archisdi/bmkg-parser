@@ -5,7 +5,6 @@ import (
 	"bmkg/utils"
 	"encoding/xml"
 	"log"
-	"os"
 )
 
 // EarthquakeRepository ...
@@ -18,7 +17,6 @@ func (r *EarthquakeRepository) GetLastEarthquake() (models.LastEartquake, error)
 	var earthquake models.LastEartquake
 	if err = xml.Unmarshal(xmlBytes, &earthquake); err != nil {
 		log.Printf("Failed Parse Data: %v", err)
-		os.Exit(1)
 	}
 
 	return earthquake, err
@@ -31,7 +29,6 @@ func (r *EarthquakeRepository) GetLatestEarthquake() (models.LatestEarthquake, e
 	var earthquakes models.LatestEarthquake
 	if err = xml.Unmarshal(xmlBytes, &earthquakes); err != nil {
 		log.Printf("Failed Parse Data: %v", err)
-		os.Exit(1)
 	}
 
 	return earthquakes, err

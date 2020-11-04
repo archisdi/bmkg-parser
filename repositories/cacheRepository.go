@@ -11,7 +11,11 @@ type CacheRepository struct{}
 // GetLastEarthquakeCache ...
 func (*CacheRepository) GetLastEarthquakeCache() (models.Earthquake, bool, error) {
 	var earthquake models.Earthquake
-	modules.Redis.GetCache("last_earthquake", &earthquake)
+
+	if err := modules.Redis.GetCache("last_earthquake", &earthquake); err != nil {
+		return earthquake, false, err
+	}
+
 	return earthquake, earthquake != (models.Earthquake{}), nil
 }
 
@@ -23,7 +27,11 @@ func (*CacheRepository) SetLastEarthquakeCache(earthquake models.Earthquake) err
 // GetLatestEarthquakeCache ...
 func (*CacheRepository) GetLatestEarthquakeCache() ([]models.Earthquake, bool, error) {
 	var earthquakes []models.Earthquake
-	modules.Redis.GetCache("latest_earthquake", &earthquakes)
+
+	if err := modules.Redis.GetCache("latest_earthquake", &earthquakes); err != nil {
+		return earthquakes, false, err
+	}
+
 	return earthquakes, len(earthquakes) != 0, nil
 }
 

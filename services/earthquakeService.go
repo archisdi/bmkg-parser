@@ -15,12 +15,15 @@ type EarthquakeService struct {
 func (s *EarthquakeService) RetrieveLastEarthquake() (models.Earthquake, error) {
 	var earthquake models.Earthquake
 
-	if cacheEarthquake, ok, _ := s.cache.GetLastEarthquakeCache(); ok {
-		earthquake = cacheEarthquake
-	} else {
-		lastEarthquake, _ := s.repo.GetLastEarthquake()
-		earthquake = lastEarthquake.Gempa.ToEarthquake()
-		s.cache.SetLastEarthquakeCache(earthquake)
+	if cachedEarthquake, ok, _ := s.cache.GetLastEarthquakeCache(); ok {
+		return cachedEarthquake, nil
+	}
+
+	// if cache not found, retrieve from source and cache
+	lastEarthquake, _ := s.repo.GetLastEarthquake()
+	earthquake = lastEarthquake.Gempa.ToEarthquake()
+	if err := s.cache.SetLastEarthquakeCache(earthquake); err != nil {
+		return earthquake ,err
 	}
 
 	return earthquake, nil
@@ -30,12 +33,15 @@ func (s *EarthquakeService) RetrieveLastEarthquake() (models.Earthquake, error) 
 func (s *EarthquakeService) RetrieveLatestEarthquakes() ([]models.Earthquake, error) {
 	var earthquakes []models.Earthquake
 
-	if cacheEarthquakes, ok, _ := s.cache.GetLatestEarthquakeCache(); ok {
-		earthquakes = cacheEarthquakes
-	} else {
-		latestEarthquake, _ := s.repo.GetLatestEarthquake()
-		earthquakes = latestEarthquake.ToEarthquakeList()
-		s.cache.SetLatestEarthquakeCache(earthquakes)
+	if cachedEarthquakes, ok, _ := s.cache.GetLatestEarthquakeCache(); ok {
+		return cachedEarthquakes, nil
+	}
+
+	// if cache not found, retrieve from source and cache
+	latestEarthquake, _ := s.repo.GetLatestEarthquake()
+	earthquakes = latestEarthquake.ToEarthquakeList()
+	if err := s.cache.SetLatestEarthquakeCache(earthquakes); err != nil {
+		return earthquakes, err
 	}
 
 	return earthquakes, nil
