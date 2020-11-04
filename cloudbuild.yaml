@@ -1,0 +1,17 @@
+steps:
+  - name: "gcr.io/cloud-builders/gsutil"
+    args: ["cp", "gs://ares-bucket/environments/bmkg-rest", "./.env"]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "asia.gcr.io/archisdi-285415/bmkg-rest", "."]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "asia.gcr.io/archisdi-285415/bmkg-rest"]
+
+  - name: "gcr.io/cloud-builders/gke-deploy:stable"
+    args:
+      - run
+      - --filename=deployment.yaml
+      - --image=asia.gcr.io/archisdi-285415/bmkg-rest:latest
+      - --location=asia-southeast2-a
+      - --cluster=ares-01-cluster

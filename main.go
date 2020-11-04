@@ -37,7 +37,7 @@ func main() {
 	app := iris.New()
 	mvc.Configure(app.Party("/"), setupMvc)
 
-	if err := app.Listen(":8080", iris.WithLogLevel("debug")); err != nil {
+	if err := app.Listen(":"+os.Getenv("APP_PORT"), iris.WithLogLevel("debug")); err != nil {
 		log.Fatal("unable to start server")
 	}
 }
