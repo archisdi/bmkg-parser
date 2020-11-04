@@ -3,7 +3,6 @@ package services
 import (
 	"bmkg/models"
 	"bmkg/repositories"
-	"fmt"
 )
 
 func NewEarthquakeService(
@@ -31,7 +30,6 @@ func (s *EarthquakeService) RetrieveLastEarthquake() (models.Earthquake, error) 
 	var earthquake models.Earthquake
 
 	if cachedEarthquake, ok, _ := s.Cache.GetLastEarthquakeCache(); ok {
-		fmt.Println("GETTING FROM CACHE")
 		return cachedEarthquake, nil
 	}
 
@@ -39,7 +37,6 @@ func (s *EarthquakeService) RetrieveLastEarthquake() (models.Earthquake, error) 
 	lastEarthquake, _ := s.Repo.GetLastEarthquake()
 	earthquake = lastEarthquake.Gempa.ToEarthquake()
 	if err := s.Cache.SetLastEarthquakeCache(earthquake); err != nil {
-		fmt.Println("GETTING FROM SOURCE")
 		return earthquake ,err
 	}
 
