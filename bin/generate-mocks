@@ -1,0 +1,1 @@
+mockery --all --recursive --output mocks --case underscore
