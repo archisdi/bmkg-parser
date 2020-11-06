@@ -5,39 +5,44 @@ import (
 	"bmkg/modules"
 	"bmkg/repositories"
 	"bmkg/services"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 )
 
-func initialize() {
-	if envErr := godotenv.Load(); envErr != nil {
-		log.Fatal("error while loading environment file")
-	}
-
-	modules.InitializeRedis(os.Getenv("REDIS_HOST"), os.Getenv("REDIS_USERNAME"), os.Getenv("REDIS_PASSWORD"))
-}
-
-func setupMvc(app *mvc.Application) {
+func setup(app *mvc.Application) {
+	// register dependencies
 	app.Register(
 		services.NewEarthquakeService(
 			repositories.NewEarthquakeRepository(),
 			repositories.NewCacheRepository(),
 			),
 		)
+
+	// register controllers
 	app.Handle(new(controllers.EarthquakeController))
 }
 
 func main() {
-	initialize()
+	// load environment variable
+	if envErr := godotenv.Load(); envErr != nil {
+		log.Fatal("error while loading environment file")
+	}
 
+	// connect to redis server
+	if redErr := modules.InitializeRedis(os.Getenv("REDIS_HOST"), os.Getenv("REDIS_USERNAME"), os.Getenv("REDIS_PASSWORD")); redErr != nil {
+		log.Fatal("error while connecting to redis server")
+	}
+
+	// initialize app and mvc module
 	app := iris.New()
-	mvc.Configure(app.Party("/"), setupMvc)
+	mvc.Configure(app.Party("/"), setup)
 
-	if err := app.Listen(":"+os.Getenv("APP_PORT"), iris.WithLogLevel("debug")); err != nil {
+	// listen to http port
+	if err := app.Listen(":"+os.Getenv("APP_PORT"), iris.WithoutBodyConsumptionOnUnmarshal); err != nil {
 		log.Fatal("unable to start server")
 	}
 }

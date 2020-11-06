@@ -18,7 +18,7 @@ type RedisClient struct {
 var Redis RedisClient
 
 // InitializeRedis ...
-func InitializeRedis(host string, username string, password string) {
+func InitializeRedis(host string, username string, password string) error {
 	client := redis.NewClient(&redis.Options{
 		Addr:     host,
 		Username: username,
@@ -29,6 +29,8 @@ func InitializeRedis(host string, username string, password string) {
 	Redis = RedisClient{
 		client,
 	}
+
+	return nil
 }
 
 // SetCache ...
