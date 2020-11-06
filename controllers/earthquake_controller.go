@@ -3,8 +3,6 @@ package controllers
 import (
 	"bmkg/models"
 	"bmkg/services"
-
-	"github.com/kataras/iris/v12"
 )
 
 // EarthquakeController ...
@@ -20,9 +18,4 @@ func (c *EarthquakeController) GetEarthquakes() (models.Response, error) {
 // GetEarthquakesLast ...
 func (c *EarthquakeController) GetEarthquakesLast() (models.Response, error) {
 	return c.Service.RetrieveLastEarthquake()
-}
-
-// GetEarthquakesLastGif ...
-func (EarthquakeController) GetEarthquakesLastGif(ctx iris.Context) {
-	ctx.Redirect("https://data.bmkg.go.id/eqmap.gif", iris.StatusPermanentRedirect)
 }

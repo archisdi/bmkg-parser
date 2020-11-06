@@ -24,3 +24,17 @@ func TestGetLastEarthquakeSuccess(t *testing.T) {
 
 	assert.Equal(t, earthquake.(models.Earthquake).Depth, earthquakeMock.Depth)
 }
+
+func TestGetLatestEarthquakeSuccess(t *testing.T) {
+	service := &mocks.EarthquakeServiceApi{}
+	earthquakesMock := []models.Earthquake{
+		{"123,321", 10, 69, time.Time{} },
+		{"321,123", 69, 10, time.Time{} },
+	}
+	service.On("RetrieveLatestEarthquakes").Return(earthquakesMock, nil).Once()
+
+	controller := &EarthquakeController{Service: service}
+	earthquakes, _ := controller.GetEarthquakes()
+
+	assert.Equal(t, len(earthquakes.([]models.Earthquake)), len(earthquakesMock))
+}
