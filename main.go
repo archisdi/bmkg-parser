@@ -5,9 +5,10 @@ import (
 	"bmkg/modules"
 	"bmkg/repositories"
 	"bmkg/services"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
+
+	"github.com/joho/godotenv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
@@ -19,11 +20,12 @@ func setup(app *mvc.Application) {
 		services.NewEarthquakeService(
 			repositories.NewEarthquakeRepository(),
 			repositories.NewCacheRepository(),
-			),
-		)
+		),
+	)
 
 	// register controllers
 	app.Handle(new(controllers.EarthquakeController))
+	app.Handle(new(controllers.WeatherController))
 }
 
 func main() {
