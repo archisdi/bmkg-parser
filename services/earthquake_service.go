@@ -6,23 +6,23 @@ import (
 )
 
 func NewEarthquakeService(
-	repo repositories.EarthquakeRepositoryApi, cache repositories.CacheRepositoryApi) EarthquakeServiceApi {
+	repo repositories.EarthquakeRepositoryAPI, cache repositories.CacheRepositoryAPI) EarthquakeServiceAPI {
 	return &EarthquakeService{
 		Repo: repo,
 		Cache: cache,
 	}
 }
 
-// EarthquakeServiceApi
-type EarthquakeServiceApi interface {
+// EarthquakeServiceAPI
+type EarthquakeServiceAPI interface {
 	RetrieveLastEarthquake() (models.Earthquake, error)
 	RetrieveLatestEarthquakes() ([]models.Earthquake, error)
 }
 
 // EarthquakeService ...
 type EarthquakeService struct {
-	Repo  repositories.EarthquakeRepositoryApi
-	Cache repositories.CacheRepositoryApi
+	Repo  repositories.EarthquakeRepositoryAPI
+	Cache repositories.CacheRepositoryAPI
 }
 
 // RetrieveLastEarthquake ...

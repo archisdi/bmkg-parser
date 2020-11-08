@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetLastEarthquakeSuccess(t *testing.T) {
-	service := &mocks.EarthquakeServiceApi{}
+	service := &mocks.EarthquakeServiceAPI{}
 
 	earthquakeMock := models.Earthquake{
 		Coordinates: "123,321",
@@ -26,7 +26,7 @@ func TestGetLastEarthquakeSuccess(t *testing.T) {
 }
 
 func TestGetLatestEarthquakeSuccess(t *testing.T) {
-	service := &mocks.EarthquakeServiceApi{}
+	service := &mocks.EarthquakeServiceAPI{}
 	earthquakesMock := []models.Earthquake{
 		{"123,321", 10, 69, time.Time{} },
 		{"321,123", 69, 10, time.Time{} },

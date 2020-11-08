@@ -6,12 +6,12 @@ import (
 )
 
 // NewCacheRepository ...
-func NewCacheRepository() CacheRepositoryApi {
+func NewCacheRepository() CacheRepositoryAPI {
 	return &CacheRepository{}
 }
 
-// CacheRepositoryApi ...
-type CacheRepositoryApi interface {
+// CacheRepositoryAPI ...
+type CacheRepositoryAPI interface {
 	GetLastEarthquakeCache() (models.Earthquake, bool, error)
 	SetLastEarthquakeCache(earthquake models.Earthquake) error
 	GetLatestEarthquakeCache() ([]models.Earthquake, bool, error)

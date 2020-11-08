@@ -1,12 +1,14 @@
 package services
 
 import (
+	"bmkg/models"
 	"bmkg/repositories"
-	"fmt"
+	"bmkg/utils"
+	"math"
 )
 
-// WeatherServiceApi ...
-type WeatherServiceApi interface {
+// WeatherServiceAPI ...
+type WeatherServiceAPI interface {
 }
 
 // WeatherService ...
@@ -14,12 +16,24 @@ type WeatherService struct {
 	repo repositories.WeatherRepository
 }
 
-// RetrieveLocationWeatherForecast ...
-func (s *WeatherService) RetrieveLocationWeatherForecast(location string) {
-	weather, _ := s.repo.GetLocationWeatherForecast(location)
+// RetrieveNationalWeatherForecast ...
+func (s *WeatherService) RetrieveNationalWeatherForecast(baseCoordinate string) models.Parameter {
+	weather, _ := s.repo.GetWeatherForecast("Indonesia")
 
+	var currentArea models.Area
+	currentDistance := math.MaxFloat64
+
+	// calculate distance to determine closest location
 	for _, area := range weather.Forecast.Area {
-		fmt.Println(area.Name[0].Text)
+		coordinate := area.GetCoordinates()
+		distance := utils.CalculateEuclideanDistance(baseCoordinate, coordinate)
+
+		if distance < currentDistance {
+			currentDistance = distance
+			currentArea = area
+		}
+
 	}
 
+	return currentArea.GetWeather()
 }

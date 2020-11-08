@@ -1,6 +1,9 @@
 package models
 
-import "encoding/xml"
+import (
+	"bmkg/utils"
+	"encoding/xml"
+)
 
 // BaseWeather ...
 type BaseWeather struct {
@@ -15,7 +18,7 @@ type forecast struct {
 	Text   string `xml:",chardata"`
 	Domain string `xml:"domain,attr"`
 	Issue  issue  `xml:"issue"`
-	Area   []area `xml:"area"`
+	Area   []Area `xml:"area"`
 }
 
 type issue struct {
@@ -29,7 +32,7 @@ type issue struct {
 	Second    string `xml:"second"`
 }
 
-type area struct {
+type Area struct {
 	Text        string `xml:",chardata"`
 	ID          string `xml:"id,attr"`
 	Latitude    string `xml:"latitude,attr"`
@@ -45,25 +48,50 @@ type area struct {
 		Text string `xml:",chardata"`
 		Lang string `xml:"lang,attr"`
 	} `xml:"name"`
-	Parameter []parameter `xml:"parameter"`
+	Parameter []Parameter `xml:"parameter"`
 }
 
-type parameter struct {
-	Text        string      `xml:",chardata"`
-	ID          string      `xml:"id,attr"`
-	Description string      `xml:"description,attr"`
-	Type        string      `xml:"type,attr"`
-	Timerange   []timerange `xml:"timerange"`
+// Parameter ...
+type Parameter struct {
+	ID          string      `xml:"id,attr" json:"id"`
+	Description string      `xml:"description,attr" json:"description"`
+	Type        string      `xml:"type,attr" json:"type"`
+	Timerange   []Timerange `xml:"timerange" json:"time_range"`
 }
 
-type timerange struct {
-	Text     string `xml:",chardata"`
-	Type     string `xml:"type,attr"`
-	H        string `xml:"h,attr"`
-	Datetime string `xml:"datetime,attr"`
-	Day      string `xml:"day,attr"`
+// Timerange ...
+type Timerange struct {
+	Type     string `xml:"type,attr" json:"type"`
+	H        string `xml:"h,attr" json:"H"`
+	Datetime string `xml:"datetime,attr" json:"date_time"`
+	Day      string `xml:"day,attr" json:"day"`
 	Value    []struct {
-		Text string `xml:",chardata"`
-		Unit string `xml:"unit,attr"`
-	} `xml:"value"`
+		Text string `xml:",chardata" json:"text"`
+		Unit string `xml:"unit,attr" json:"unit"`
+	} `xml:"value" json: "value"`
+}
+
+// GetCoordinates ...
+func (a *Area) GetCoordinates() string {
+	return a.Latitude + "," + a.Longitude
+}
+
+// GetName ...
+func (a *Area) GetName() string {
+	return a.Name[0].Text
+}
+
+// GetDomain ...
+func (a *Area) GetDomain() string {
+	return utils.SpaceFieldsJoin(a.Domain)
+}
+
+// GetWeather ...
+func (a *Area) GetWeather() Parameter {
+	for _, params := range a.Parameter {
+		if params.ID == "weather" {
+			return params
+		}
+	}
+	return Parameter{}
 }

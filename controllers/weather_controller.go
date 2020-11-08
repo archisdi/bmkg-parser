@@ -11,11 +11,6 @@ type WeatherController struct {
 }
 
 // GetWeathersBy ...
-func (c *WeatherController) GetWeathersBy(location string) (models.Response, error) {
-
-	c.service.RetrieveLocationWeatherForecast("DKIJakarta")
-
-	return map[string]string{
-		"messsage": "WOW",
-	}, nil
+func (c *WeatherController) GetWeathersBy(coordinate string) (models.Response, error) {
+	return c.service.RetrieveNationalWeatherForecast(coordinate), nil
 }

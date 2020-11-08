@@ -7,12 +7,12 @@ import (
 )
 
 // NewEarthquakeRepository ...
-func NewEarthquakeRepository() EarthquakeRepositoryApi {
+func NewEarthquakeRepository() EarthquakeRepositoryAPI {
 	return &EarthquakeRepository{}
 }
 
-// EarthquakeRepositoryApi ...
-type EarthquakeRepositoryApi interface {
+// EarthquakeRepositoryAPI ...
+type EarthquakeRepositoryAPI interface {
 	GetLastEarthquake() (models.LastEartquake, error)
 	GetLatestEarthquake() (models.LatestEarthquake, error)
 }

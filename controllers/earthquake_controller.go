@@ -7,7 +7,7 @@ import (
 
 // EarthquakeController ...
 type EarthquakeController struct {
-	Service services.EarthquakeServiceApi
+	Service services.EarthquakeServiceAPI
 }
 
 // GetEarthquakes ...
