@@ -6,16 +6,16 @@ import (
 	"time"
 )
 
+// WeatherOutput ...
+type WeatherOutput struct {
+	Location 	GeoLocation `json:"location"`
+	Weather		[]Weather 	`json:"weather"`
+}
+
 // GeoLocation ...
 type GeoLocation struct {
-	Province struct {
-		Name       string `json:"name"`
-		Coordinate string `json:"coordinate"`
-	} `json:"province"`
-	Region struct {
-		Name       string `json:"name"`
-		Coordinate string `json:"coordinate"`
-	} `json:"region"`
+	Name       string `json:"name"`
+	Coordinate string `json:"coordinate"`
 }
 
 // Weather ...

@@ -12,5 +12,5 @@ type WeatherController struct {
 
 // GetWeathersBy ...
 func (c *WeatherController) GetWeathersBy(coordinate string) (models.Response, error) {
-	return c.service.RetrieveNationalWeatherForecast(coordinate), nil
+	return c.service.RetrieveNationalWeatherForecast(coordinate)
 }
