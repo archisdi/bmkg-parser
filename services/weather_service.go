@@ -17,7 +17,12 @@ type WeatherService struct {
 }
 
 // RetrieveNationalWeatherForecast ...
-func (s *WeatherService) RetrieveNationalWeatherForecast(baseCoordinate string) (models.WeatherOutput, error) {
+func (s *WeatherService) RetrieveNationalWeatherForecast(coordinate string) (models.WeatherOutput, error) {
+	return s.RetrieveRegionalWeatherForecast("Indonesia", coordinate)
+}
+
+// RetrieveNationalWeatherForecast ...
+func (s *WeatherService) RetrieveRegionalWeatherForecast(region string, baseCoordinate string) (models.WeatherOutput, error) {
 	var output models.WeatherOutput
 
 	// parse base coordinate
@@ -27,7 +32,7 @@ func (s *WeatherService) RetrieveNationalWeatherForecast(baseCoordinate string) 
 	}
 
 	// get weather data from BMKG
-	weather, _ := s.repo.GetWeatherForecast("Indonesia")
+	weather, _ := s.repo.GetWeatherForecast(region)
 
 	var currentArea models.Area
 	currentDistance := math.MaxFloat64
