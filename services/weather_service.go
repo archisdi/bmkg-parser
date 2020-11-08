@@ -17,7 +17,7 @@ type WeatherService struct {
 }
 
 // RetrieveNationalWeatherForecast ...
-func (s *WeatherService) RetrieveNationalWeatherForecast(baseCoordinate string) models.Parameter {
+func (s *WeatherService) RetrieveNationalWeatherForecast(baseCoordinate string) []models.Weather {
 	weather, _ := s.repo.GetWeatherForecast("Indonesia")
 
 	var currentArea models.Area

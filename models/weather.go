@@ -3,7 +3,27 @@ package models
 import (
 	"bmkg/utils"
 	"encoding/xml"
+	"time"
 )
+
+// GeoLocation ...
+type GeoLocation struct {
+	Province struct {
+		Name       string `json:"name"`
+		Coordinate string `json:"coordinate"`
+	} `json:"province"`
+	Region struct {
+		Name       string `json:"name"`
+		Coordinate string `json:"coordinate"`
+	} `json:"region"`
+}
+
+// Weather ...
+type Weather struct {
+	Value       string    `json:"value"`
+	Description string    `json:"description"`
+	Timestamp   time.Time `json:"timestamp"`
+}
 
 // BaseWeather ...
 type BaseWeather struct {
@@ -32,6 +52,7 @@ type issue struct {
 	Second    string `xml:"second"`
 }
 
+// Area ...
 type Area struct {
 	Text        string `xml:",chardata"`
 	ID          string `xml:"id,attr"`
@@ -61,14 +82,17 @@ type Parameter struct {
 
 // Timerange ...
 type Timerange struct {
-	Type     string `xml:"type,attr" json:"type"`
-	H        string `xml:"h,attr" json:"H"`
-	Datetime string `xml:"datetime,attr" json:"date_time"`
-	Day      string `xml:"day,attr" json:"day"`
-	Value    []struct {
-		Text string `xml:",chardata" json:"text"`
-		Unit string `xml:"unit,attr" json:"unit"`
-	} `xml:"value" json: "value"`
+	Type     string         `xml:"type,attr" json:"type"`
+	H        string         `xml:"h,attr" json:"H"`
+	Datetime string         `xml:"datetime,attr" json:"date_time"`
+	Day      string         `xml:"day,attr" json:"day"`
+	Value    []TimerangeVal `xml:"value" json: "value"`
+}
+
+// TimerangeVal ...
+type TimerangeVal struct {
+	Text string `xml:",chardata" json:"text"`
+	Unit string `xml:"unit,attr" json:"unit"`
 }
 
 // GetCoordinates ...
@@ -87,11 +111,34 @@ func (a *Area) GetDomain() string {
 }
 
 // GetWeather ...
-func (a *Area) GetWeather() Parameter {
+func (a *Area) GetWeather() []Weather {
+	parameter := Parameter{}
 	for _, params := range a.Parameter {
 		if params.ID == "weather" {
-			return params
+			parameter = params
 		}
 	}
-	return Parameter{}
+
+	var weathers []Weather
+	for _, timerange := range parameter.Timerange {
+		weathers = append(weathers, timerange.ToWeather())
+	}
+
+	return weathers
+}
+
+// GetValue ...
+func (t *Timerange) GetValue() string {
+	return t.Value[0].Text
+}
+
+// ToWeather ...
+func (t *Timerange) ToWeather() Weather {
+	val := t.GetValue()
+	time, _ := time.Parse("200601021504", t.Datetime)
+	return Weather{
+		Value:       val,
+		Description: utils.Constant.WeatherCode[val],
+		Timestamp:   time,
+	}
 }

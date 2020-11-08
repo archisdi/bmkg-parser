@@ -5,6 +5,7 @@ import (
 	"bmkg/modules"
 	"bmkg/repositories"
 	"bmkg/services"
+	"bmkg/utils"
 	"log"
 	"os"
 
@@ -38,6 +39,9 @@ func main() {
 	if redErr := modules.InitializeRedis(os.Getenv("REDIS_HOST"), os.Getenv("REDIS_USERNAME"), os.Getenv("REDIS_PASSWORD")); redErr != nil {
 		log.Fatal("error while connecting to redis server")
 	}
+
+	// init constants
+	utils.InitializeConstant()
 
 	// initialize app and mvc module
 	app := iris.New()
