@@ -71,6 +71,34 @@ func (_m *CacheRepositoryAPI) GetLatestEarthquakeCache() ([]models.Earthquake, b
 	return r0, r1, r2
 }
 
+// GetRegionWeatherCache provides a mock function with given fields: region
+func (_m *CacheRepositoryAPI) GetRegionWeatherCache(region string) (models.BaseWeather, bool, error) {
+	ret := _m.Called(region)
+
+	var r0 models.BaseWeather
+	if rf, ok := ret.Get(0).(func(string) models.BaseWeather); ok {
+		r0 = rf(region)
+	} else {
+		r0 = ret.Get(0).(models.BaseWeather)
+	}
+
+	var r1 bool
+	if rf, ok := ret.Get(1).(func(string) bool); ok {
+		r1 = rf(region)
+	} else {
+		r1 = ret.Get(1).(bool)
+	}
+
+	var r2 error
+	if rf, ok := ret.Get(2).(func(string) error); ok {
+		r2 = rf(region)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // SetLastEarthquakeCache provides a mock function with given fields: earthquake
 func (_m *CacheRepositoryAPI) SetLastEarthquakeCache(earthquake models.Earthquake) error {
 	ret := _m.Called(earthquake)
@@ -92,6 +120,20 @@ func (_m *CacheRepositoryAPI) SetLatestEarthquakeCache(earthquakes []models.Eart
 	var r0 error
 	if rf, ok := ret.Get(0).(func([]models.Earthquake) error); ok {
 		r0 = rf(earthquakes)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// SetRegionWeatherCache provides a mock function with given fields: region, weather
+func (_m *CacheRepositoryAPI) SetRegionWeatherCache(region string, weather models.BaseWeather) error {
+	ret := _m.Called(region, weather)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, models.BaseWeather) error); ok {
+		r0 = rf(region, weather)
 	} else {
 		r0 = ret.Error(0)
 	}

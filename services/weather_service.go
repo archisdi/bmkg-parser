@@ -34,6 +34,10 @@ type WeatherService struct {
 func (s *WeatherService) RetrieveRegionalWeatherForecast(region string, baseCoordinate string) (models.WeatherOutput, error) {
 	var output models.WeatherOutput
 
+	if region == "" {
+		region = "Indonesia"
+	}
+
 	// parse base coordinate
 	xA, xB, coorErr := utils.StringToCoordinate(baseCoordinate)
 	if coorErr != nil {

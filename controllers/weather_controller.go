@@ -12,9 +12,5 @@ type WeatherController struct {
 
 // GetWeather ...
 func (c *WeatherController) GetWeather(request models.WeatherRequest) (models.Response, error) {
-	region := request.Region
-	if region == "" {
-		region = "Indonesia"
-	}
-	return c.Service.RetrieveRegionalWeatherForecast(region, request.Coordinate)
+	return c.Service.RetrieveRegionalWeatherForecast(request.Region, request.Coordinate)
 }
