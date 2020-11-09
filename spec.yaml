@@ -1,0 +1,115 @@
+openapi: "3.0.2"
+info:
+  title: BMKG REST API
+  version: "1.0"
+servers:
+  - url: https://api-bmkg.archisdi.me
+    description: Production
+  - url: http://localhost:8080
+    description: Local server
+tags:
+  - name: Earthquake
+  - name: Weather
+paths:
+  /earthquakes:
+    get:
+      description: Get 60 latest earthquake data
+      tags:
+        - Earthquake
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/earthquake"
+  /earthquakes/last:
+    get:
+      description: Get last earthquake data
+      tags:
+        - Earthquake
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                $ref: "#/components/schemas/earthquake"
+  /weather:
+    get:
+      description: Get region weather prediction
+      parameters:
+        - in: query
+          name: region
+          schema:
+            type: string
+          required: false
+          description: the region name to predict
+        - in: query
+          name: coordinate
+          schema:
+            type: string
+          required: true
+          description: coordinate of client
+      tags:
+        - Weather
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  location:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      coordinate:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        weather:
+                          type: object
+                          $ref: "#/components/schemas/prediction"
+                        temperature:
+                          type: object
+                          $ref: "#/components/schemas/prediction"
+                        humidity:
+                          type: object
+                          $ref: "#/components/schemas/prediction"
+                        wind_direction:
+                          type: object
+                          $ref: "#/components/schemas/prediction"
+                        wind_speed:
+                          type: object
+                          $ref: "#/components/schemas/prediction"
+components:
+  schemas:
+    earthquake:
+      type: object
+      properties:
+        coordinate:
+          type: string
+        magnitude:
+          type: number
+        depth:
+          type: number
+        timestamp:
+          type: string
+    prediction:
+      type: object
+      properties:
+        unit:
+          type: string
+        value:
+          type: string
+        description:
+          type: string
