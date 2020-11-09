@@ -4,6 +4,7 @@ import (
 	"bmkg/models"
 	"bmkg/repositories"
 	"bmkg/utils"
+	"errors"
 	"math"
 )
 
@@ -32,7 +33,10 @@ func (s *WeatherService) RetrieveRegionalWeatherForecast(region string, baseCoor
 	}
 
 	// get weather data from BMKG
-	weather, _ := s.repo.GetWeatherForecast(region)
+	weather, sourceErr := s.repo.GetWeatherForecast(region)
+	if sourceErr != nil {
+		return output, errors.New("invalid region name")
+	}
 
 	var currentArea models.Area
 	currentDistance := math.MaxFloat64

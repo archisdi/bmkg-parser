@@ -28,9 +28,9 @@ func setup(app *mvc.Application) {
 	app.Handle(new(controllers.EarthquakeController))
 	app.Handle(new(controllers.WeatherController))
 
-	// error handler
+	// register error handler
 	app.HandleError(func(ctx iris.Context, err error) {
-		ctx.JSON(map[string]interface{}{
+		_, _ = ctx.JSON(map[string]interface{}{
 			"message": err.Error(),
 		})
 	})

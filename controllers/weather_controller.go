@@ -10,12 +10,11 @@ type WeatherController struct {
 	service services.WeatherService
 }
 
-// GetWeathersBy ...
-func (c *WeatherController) GetWeathersRegionBy(coordinate string) (models.Response, error) {
-	return c.service.RetrieveNationalWeatherForecast(coordinate)
-}
-
-// GetWeathersBy ...
-func (c *WeatherController) GetWeathersBy(coordinate string) (models.Response, error) {
-	return c.service.RetrieveNationalWeatherForecast(coordinate)
+// GetWeather ...
+func (c *WeatherController) GetWeather(request models.WeatherRequest) (models.Response, error) {
+	region := request.Region
+	if region == "" {
+		region = "Indonesia"
+	}
+	return c.service.RetrieveRegionalWeatherForecast(region, request.Coordinate)
 }
