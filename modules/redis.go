@@ -41,7 +41,7 @@ func (c *RedisClient) SetCache(key string, value interface{}) error {
 		return err
 	}
 
-	c.Set(context.TODO(), key, p, time.Minute)
+	c.Set(context.TODO(), key, p, time.Minute * 10)
 
 	return nil
 }

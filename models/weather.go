@@ -17,7 +17,7 @@ func generateEmptyPredictions() []Prediction {
 
 // WeatherOutput ...
 type WeatherOutput struct {
-	Location 	GeoLocation `json:"location"`
+	Location 	GeoLocation		`json:"location"`
 	Data		[]Prediction 	`json:"data"`
 }
 
@@ -46,49 +46,49 @@ type PredictionParam struct {
 
 // BaseWeather ...
 type BaseWeather struct {
-	XMLName          xml.Name `xml:"data"`
-	Text             string   `xml:",chardata"`
-	Source           string   `xml:"source,attr"`
-	Productioncenter string   `xml:"productioncenter,attr"`
-	Forecast         forecast `xml:"forecast"`
+	XMLName          xml.Name `xml:"data" json:"data"`
+	Text             string   `xml:",chardata" json:"text"`
+	Source           string   `xml:"source,attr" json:"source"`
+	Productioncenter string   `xml:"productioncenter,attr" json:"production_center"`
+	Forecast         forecast `xml:"forecast" json:"forecast"`
 }
 
 type forecast struct {
-	Text   string `xml:",chardata"`
-	Domain string `xml:"domain,attr"`
-	Issue  issue  `xml:"issue"`
-	Area   []Area `xml:"area"`
+	Text   string `xml:",chardata" json:"text"`
+	Domain string `xml:"domain,attr" json:"domain"`
+	Issue  issue  `xml:"issue" json:"issue"`
+	Area   []Area `xml:"area" json:"area"`
 }
 
 type issue struct {
-	Text      string `xml:",chardata"`
-	Timestamp string `xml:"timestamp"`
-	Year      string `xml:"year"`
-	Month     string `xml:"month"`
-	Day       string `xml:"day"`
-	Hour      string `xml:"hour"`
-	Minute    string `xml:"minute"`
-	Second    string `xml:"second"`
+	Text      string `xml:",chardata" json:"text"`
+	Timestamp string `xml:"timestamp" json:"timestamp"`
+	Year      string `xml:"year" json:"year"`
+	Month     string `xml:"month" json:"month"`
+	Day       string `xml:"day" json:"day"`
+	Hour      string `xml:"hour" json:"hour"`
+	Minute    string `xml:"minute" json:"minute"`
+	Second    string `xml:"second" json:"second"`
 }
 
 // Area ...
 type Area struct {
-	Text        string `xml:",chardata"`
-	ID          string `xml:"id,attr"`
-	Latitude    string `xml:"latitude,attr"`
-	Longitude   string `xml:"longitude,attr"`
-	Coordinate  string `xml:"coordinate,attr"`
-	Type        string `xml:"type,attr"`
-	Region      string `xml:"region,attr"`
-	Level       string `xml:"level,attr"`
-	Description string `xml:"description,attr"`
-	Domain      string `xml:"domain,attr"`
-	Tags        string `xml:"tags,attr"`
+	Text        string `xml:",chardata" json:"text"`
+	ID          string `xml:"id,attr" json:"id"`
+	Latitude    string `xml:"latitude,attr" json:"latitude"`
+	Longitude   string `xml:"longitude,attr" json:"longitude"`
+	Coordinate  string `xml:"coordinate,attr" json:"coordinate"`
+	Type        string `xml:"type,attr" json:"type"`
+	Region      string `xml:"region,attr" json:"region"`
+	Level       string `xml:"level,attr" json:"level"`
+	Description string `xml:"description,attr" json:"description"`
+	Domain      string `xml:"domain,attr" json:"domain"`
+	Tags        string `xml:"tags,attr" json:"tags"`
 	Name        []struct {
-		Text string `xml:",chardata"`
-		Lang string `xml:"lang,attr"`
-	} `xml:"name"`
-	Parameter []Parameter `xml:"parameter"`
+		Text string `xml:",chardata" json:"text"`
+		Lang string `xml:"lang,attr" json:"lang"`
+	} `xml:"name" json:"name"`
+	Parameter []Parameter `xml:"parameter" json:"parameter"`
 }
 
 // Parameter ...
@@ -105,7 +105,7 @@ type Timerange struct {
 	H        string         `xml:"h,attr" json:"H"`
 	Datetime string         `xml:"datetime,attr" json:"date_time"`
 	Day      string         `xml:"day,attr" json:"day"`
-	Value    []TimerangeVal `xml:"value" json: "value"`
+	Value    []TimerangeVal `xml:"value" json:"value"`
 }
 
 // TimerangeVal ...

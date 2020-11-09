@@ -16,6 +16,8 @@ type CacheRepositoryAPI interface {
 	SetLastEarthquakeCache(earthquake models.Earthquake) error
 	GetLatestEarthquakeCache() ([]models.Earthquake, bool, error)
 	SetLatestEarthquakeCache(earthquakes []models.Earthquake) error
+	GetRegionWeatherCache(region string) (models.BaseWeather, bool, error)
+	SetRegionWeatherCache(region string, weather models.BaseWeather) error
 }
 
 // CacheRepository ...
@@ -51,4 +53,20 @@ func (*CacheRepository) GetLatestEarthquakeCache() ([]models.Earthquake, bool, e
 // SetLatestEarthquakeCache ...
 func (*CacheRepository) SetLatestEarthquakeCache(earthquakes []models.Earthquake) error {
 	return modules.Redis.SetCache("latest_earthquake", earthquakes)
+}
+
+// GetRegionWeatherCache ...
+func (*CacheRepository) GetRegionWeatherCache(region string) (models.BaseWeather, bool, error) {
+	var weather models.BaseWeather
+
+	if err := modules.Redis.GetCache("weather_" + region, &weather); err != nil {
+		return weather, false, err
+	}
+
+	return weather, weather.Source != "", nil
+}
+
+// SetRegionWeatherCache ...
+func (*CacheRepository) SetRegionWeatherCache(region string, weather models.BaseWeather) error {
+	return modules.Redis.SetCache("weather_" + region, weather)
 }

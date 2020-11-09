@@ -40,16 +40,24 @@ func (s *WeatherService) RetrieveRegionalWeatherForecast(region string, baseCoor
 		return output, coorErr
 	}
 
-	// get weather data from BMKG
-	weather, sourceErr := s.Repo.GetWeatherForecast(region)
-	if sourceErr != nil {
+	// retrieve weather data
+	var weather models.BaseWeather
+	if cacheWeather, ok, _ := s.Cache.GetRegionWeatherCache(region); ok {
+		weather = cacheWeather
+	} else if sourceWeather, sourceErr := s.Repo.GetWeatherForecast(region); sourceErr != nil {
 		return output, errors.New("invalid region name")
+	} else {
+		weather = sourceWeather
+		if cacheErr := s.Cache.SetRegionWeatherCache(region, weather); cacheErr != nil {
+			return output, cacheErr
+		}
 	}
+
+	// calculate distance to determine closest location
 
 	var currentArea models.Area
 	currentDistance := math.MaxFloat64
 
-	// calculate distance to determine closest location
 	for _, area := range weather.Forecast.Area {
 		if yA, yB, coorErr := utils.StringToCoordinate(area.GetCoordinates()); coorErr != nil {
 			return output, coorErr
