@@ -6,10 +6,19 @@ import (
 	"time"
 )
 
+
+func generateEmptyPredictions() []Prediction {
+	var predictions []Prediction
+	for i := 0; i < 12; i++ {
+		predictions = append(predictions, Prediction{})
+	}
+	return predictions
+}
+
 // WeatherOutput ...
 type WeatherOutput struct {
 	Location 	GeoLocation `json:"location"`
-	Weather		[]Weather 	`json:"weather"`
+	Data		[]Prediction 	`json:"data"`
 }
 
 // GeoLocation ...
@@ -18,11 +27,21 @@ type GeoLocation struct {
 	Coordinate string `json:"coordinate"`
 }
 
-// Weather ...
-type Weather struct {
+// Prediction ...
+type Prediction struct {
+	Weather 		PredictionParam `json:"weather"`
+	Temperature 	PredictionParam `json:"temperature"`
+	Humidity		PredictionParam `json:"humidity"`
+	WindDirection	PredictionParam `json:"wind_direction"`
+	WindSpeed		PredictionParam `json:"wind_speed"`
+	Timestamp   	time.Time 		`json:"timestamp"`
+}
+
+// PredictionParam ...
+type PredictionParam struct {
+	Unit 		string 	  `json:"unit"`
 	Value       string    `json:"value"`
 	Description string    `json:"description"`
-	Timestamp   time.Time `json:"timestamp"`
 }
 
 // BaseWeather ...
@@ -111,34 +130,86 @@ func (a *Area) GetDomain() string {
 }
 
 // GetWeather ...
-func (a *Area) GetWeather() []Weather {
-	parameter := Parameter{}
+func (a *Area) GetWeather() []Prediction {
+	predictions := generateEmptyPredictions()
 	for _, params := range a.Parameter {
-		if params.ID == "weather" {
-			parameter = params
+		switch params.ID {
+			case "weather": {
+				for i, timeRange := range params.Timerange {
+					predictions[i].Weather = timeRange.ToWeather()
+					predictions[i].Timestamp = timeRange.GetDatetime()
+				}
+			}
+			case "t": {
+				for i, timeRange := range params.Timerange {
+					predictions[i].Temperature = timeRange.ToBaseData()
+				}
+			}
+			case "hu": {
+				for i, timeRange := range params.Timerange {
+					predictions[i].Humidity = timeRange.ToBaseData()
+				}
+			}
+			case "wd": {
+				for i, timeRange := range params.Timerange {
+					predictions[i].WindDirection = timeRange.ToWindDirection()
+				}
+			}
+			case "ws": {
+				for i, timeRange := range params.Timerange {
+					predictions[i].WindSpeed = timeRange.ToWindSpeed()
+				}
+			}
 		}
 	}
-
-	var weathers []Weather
-	for _, timerange := range parameter.Timerange {
-		weathers = append(weathers, timerange.ToWeather())
-	}
-
-	return weathers
+	return predictions
 }
 
 // GetValue ...
-func (t *Timerange) GetValue() string {
-	return t.Value[0].Text
+func (t *Timerange) GetValue() (string, string) {
+	return t.Value[0].Text, t.Value[0].Unit
 }
 
 // ToWeather ...
-func (t *Timerange) ToWeather() Weather {
-	val := t.GetValue()
-	time, _ := time.Parse("200601021504", t.Datetime)
-	return Weather{
+func (t *Timerange) ToWeather() PredictionParam {
+	val, unit := t.GetValue()
+	return PredictionParam{
+		Unit:        unit,
 		Value:       val,
 		Description: utils.Constant.WeatherCode[val],
-		Timestamp:   time,
 	}
+}
+
+// ToWindDirection ...
+func (t *Timerange) ToWindDirection() PredictionParam {
+	return PredictionParam{
+		Unit:        t.Value[0].Unit,
+		Value:       t.Value[0].Text,
+		Description: t.Value[1].Text,
+	}
+}
+
+// ToWindSpeed ...
+func (t *Timerange) ToWindSpeed() PredictionParam {
+	return PredictionParam{
+		Unit:        t.Value[2].Unit,
+		Value:       t.Value[2].Text,
+		Description: "-",
+	}
+}
+
+// ToTemperature ...
+func (t *Timerange) ToBaseData() PredictionParam {
+	val, unit := t.GetValue()
+	return PredictionParam{
+		Unit:        unit,
+		Value:       val,
+		Description: "-",
+	}
+}
+
+// GetDatetime ...
+func (t *Timerange) GetDatetime() time.Time {
+	parsedTime, _ := time.Parse("200601021504", t.Datetime)
+	return parsedTime
 }

@@ -68,7 +68,7 @@ func (s *WeatherService) RetrieveRegionalWeatherForecast(region string, baseCoor
 			Name:       currentArea.GetName(),
 			Coordinate: currentArea.GetCoordinates(),
 		},
-		Weather:  currentArea.GetWeather(),
+		Data:  currentArea.GetWeather(),
 	}
 
 	return output, nil
