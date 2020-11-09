@@ -5,8 +5,11 @@ import (
 	"bmkg/repositories"
 )
 
+// NewEarthquakeService ...
 func NewEarthquakeService(
-	repo repositories.EarthquakeRepositoryAPI, cache repositories.CacheRepositoryAPI) EarthquakeServiceAPI {
+	repo repositories.EarthquakeRepositoryAPI,
+	cache repositories.CacheRepositoryAPI,
+	) EarthquakeServiceAPI {
 	return &EarthquakeService{
 		Repo: repo,
 		Cache: cache,

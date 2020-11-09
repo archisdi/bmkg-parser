@@ -17,18 +17,17 @@ import (
 
 func setup(app *mvc.Application) {
 	// register dependencies
+	earthquakeRepo := repositories.NewEarthquakeRepository()
+	weatherRepo := repositories.NewWeatherRepository()
+	cacheRepo := repositories.NewCacheRepository()
 	app.Register(
-		services.NewEarthquakeService(
-			repositories.NewEarthquakeRepository(),
-			repositories.NewCacheRepository(),
-		),
+		services.NewEarthquakeService(earthquakeRepo, cacheRepo),
+		services.NewWeatherService(weatherRepo, cacheRepo),
 	)
 
-	// register controllers
+	// register controllers and error handler
 	app.Handle(new(controllers.EarthquakeController))
 	app.Handle(new(controllers.WeatherController))
-
-	// register error handler
 	app.HandleError(func(ctx iris.Context, err error) {
 		_, _ = ctx.JSON(map[string]interface{}{
 			"message": err.Error(),

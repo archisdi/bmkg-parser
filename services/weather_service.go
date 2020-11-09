@@ -8,18 +8,26 @@ import (
 	"math"
 )
 
+// NewWeatherService ...
+func NewWeatherService(
+	repo repositories.WeatherRepositoryAPI,
+	cache repositories.CacheRepositoryAPI,
+	) WeatherServiceAPI {
+	return &WeatherService{
+		Repo:  repo,
+		Cache: cache,
+	}
+}
+
 // WeatherServiceAPI ...
 type WeatherServiceAPI interface {
+	RetrieveRegionalWeatherForecast(region string, baseCoordinate string) (models.WeatherOutput, error)
 }
 
 // WeatherService ...
 type WeatherService struct {
-	repo repositories.WeatherRepository
-}
-
-// RetrieveNationalWeatherForecast ...
-func (s *WeatherService) RetrieveNationalWeatherForecast(coordinate string) (models.WeatherOutput, error) {
-	return s.RetrieveRegionalWeatherForecast("Indonesia", coordinate)
+	Repo repositories.WeatherRepositoryAPI
+	Cache repositories.CacheRepositoryAPI
 }
 
 // RetrieveNationalWeatherForecast ...
@@ -33,7 +41,7 @@ func (s *WeatherService) RetrieveRegionalWeatherForecast(region string, baseCoor
 	}
 
 	// get weather data from BMKG
-	weather, sourceErr := s.repo.GetWeatherForecast(region)
+	weather, sourceErr := s.Repo.GetWeatherForecast(region)
 	if sourceErr != nil {
 		return output, errors.New("invalid region name")
 	}

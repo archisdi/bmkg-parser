@@ -7,7 +7,7 @@ import (
 
 // WeatherController ...
 type WeatherController struct {
-	service services.WeatherService
+	Service services.WeatherServiceAPI
 }
 
 // GetWeather ...
@@ -16,5 +16,5 @@ func (c *WeatherController) GetWeather(request models.WeatherRequest) (models.Re
 	if region == "" {
 		region = "Indonesia"
 	}
-	return c.service.RetrieveRegionalWeatherForecast(region, request.Coordinate)
+	return c.Service.RetrieveRegionalWeatherForecast(region, request.Coordinate)
 }

@@ -6,9 +6,14 @@ import (
 	"encoding/xml"
 )
 
+// NewWeatherRepository ...
+func NewWeatherRepository() WeatherRepositoryAPI {
+	return &WeatherRepository{}
+}
+
 // WeatherRepositoryAPI ...
 type WeatherRepositoryAPI interface {
-	GetLocationWeatherForecast(location string) (models.BaseWeather, error)
+	GetWeatherForecast(location string) (models.BaseWeather, error)
 }
 
 // WeatherRepository ...
