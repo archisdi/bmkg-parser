@@ -50,17 +50,17 @@ type BaseWeather struct {
 	Text             string   `xml:",chardata" json:"text"`
 	Source           string   `xml:"source,attr" json:"source"`
 	Productioncenter string   `xml:"productioncenter,attr" json:"production_center"`
-	Forecast         forecast `xml:"forecast" json:"forecast"`
+	Forecast         Forecast `xml:"forecast" json:"forecast"`
 }
 
-type forecast struct {
+type Forecast struct {
 	Text   string `xml:",chardata" json:"text"`
 	Domain string `xml:"domain,attr" json:"domain"`
-	Issue  issue  `xml:"issue" json:"issue"`
+	Issue  Issue  `xml:"issue" json:"issue"`
 	Area   []Area `xml:"area" json:"area"`
 }
 
-type issue struct {
+type Issue struct {
 	Text      string `xml:",chardata" json:"text"`
 	Timestamp string `xml:"timestamp" json:"timestamp"`
 	Year      string `xml:"year" json:"year"`
@@ -84,11 +84,13 @@ type Area struct {
 	Description string `xml:"description,attr" json:"description"`
 	Domain      string `xml:"domain,attr" json:"domain"`
 	Tags        string `xml:"tags,attr" json:"tags"`
-	Name        []struct {
-		Text string `xml:",chardata" json:"text"`
-		Lang string `xml:"lang,attr" json:"lang"`
-	} `xml:"name" json:"name"`
-	Parameter []Parameter `xml:"parameter" json:"parameter"`
+	Name        []AreaName `xml:"name" json:"name"`
+	Parameter 	[]Parameter `xml:"parameter" json:"parameter"`
+}
+
+type AreaName struct {
+	Text string `xml:",chardata" json:"text"`
+	Lang string `xml:"lang,attr" json:"lang"`
 }
 
 // Parameter ...
