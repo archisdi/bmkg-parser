@@ -14,7 +14,7 @@ type Earthquake struct {
 	Timestamp   time.Time `json:"timestamp"`
 }
 
-type baseXMLEarthquake struct {
+type BaseXMLEarthquake struct {
 	Tanggal string `xml:"Tanggal" json:"date"`
 	Jam     string `xml:"Jam" json:"tome"`
 	Point   struct {
@@ -27,24 +27,28 @@ type baseXMLEarthquake struct {
 	Symbol    string `xml:"_symbol" json:"symbol"`
 }
 
+type LastEarthquakeDetail struct {
+	BaseXMLEarthquake
+	Wilayah1 string `xml:"Wilayah1" json:"area_1"`
+	Wilayah2 string `xml:"Wilayah2" json:"area_2"`
+	Wilayah3 string `xml:"Wilayah3" json:"area_3"`
+	Wilayah4 string `xml:"Wilayah4" json:"area_4"`
+	Potensi  string `xml:"Potensi" json:"description"`
+}
+
 // LastEartquake ...
 type LastEartquake struct {
-	Gempa struct {
-		baseXMLEarthquake
-		Wilayah1 string `xml:"Wilayah1" json:"area_1"`
-		Wilayah2 string `xml:"Wilayah2" json:"area_2"`
-		Wilayah3 string `xml:"Wilayah3" json:"area_3"`
-		Wilayah4 string `xml:"Wilayah4" json:"area_4"`
-		Potensi  string `xml:"Potensi" json:"description"`
-	} `xml:"gempa" json:"gempa"`
+	Gempa LastEarthquakeDetail `xml:"gempa" json:"gempa"`
+}
+
+type LatestEartquakeDetail struct {
+	BaseXMLEarthquake
+	Wilayah string `xml:"Wilayah" json:"area"`
 }
 
 // LatestEarthquake ...
 type LatestEarthquake struct {
-	Gempa []struct {
-		baseXMLEarthquake
-		Wilayah string `xml:"Wilayah" json:"area"`
-	} `xml:"gempa"`
+	Gempa [] LatestEartquakeDetail `xml:"gempa"`
 }
 
 // ToEarthquakeList ...
@@ -58,11 +62,11 @@ func (e *LatestEarthquake) ToEarthquakeList() []Earthquake {
 	return earthquakes
 }
 
-func (e baseXMLEarthquake) String() string {
+func (e BaseXMLEarthquake) String() string {
 	return "coordinates: " + e.Point.Coordinates + "; magnitude: " + e.Kedalaman + "; time: " + e.Tanggal + " " + e.Jam
 }
 
-func (e *baseXMLEarthquake) ToEarthquake() Earthquake {
+func (e *BaseXMLEarthquake) ToEarthquake() Earthquake {
 
 	parsedDate, _ := time.Parse("02-Jan-06 15:04:05 MST", e.Tanggal+" "+e.Jam)
 
