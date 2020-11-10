@@ -1,3 +1,3 @@
 # run unit test
-go test ./controllers -v -cover -coverprofile=coverage.txt -tags test
+go test ./... -v -cover -coverprofile=coverage.txt -tags test
 go tool cover -html=coverage.txt -o coverage.html
