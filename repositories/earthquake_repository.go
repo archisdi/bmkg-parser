@@ -22,7 +22,7 @@ type EarthquakeRepository struct{}
 
 // GetLastEarthquake ...
 func (r *EarthquakeRepository) GetLastEarthquake() (models.LastEartquake, error) {
-	xmlBytes, err := utils.GetXMLFromURL("https://data.bmkg.go.id/autogempa.xml")
+	xmlBytes, err := utils.GetXMLFromURL("https://data.bmkg.go.id/datamkg/TEWS/autogempa.xml")
 
 	var earthquake models.LastEartquake
 	if err = xml.Unmarshal(xmlBytes, &earthquake); err != nil {
@@ -34,7 +34,7 @@ func (r *EarthquakeRepository) GetLastEarthquake() (models.LastEartquake, error)
 
 // GetLatestEarthquake ...
 func (r *EarthquakeRepository) GetLatestEarthquake() (models.LatestEarthquake, error) {
-	xmlBytes, err := utils.GetXMLFromURL("https://data.bmkg.go.id/gempaterkini.xml")
+	xmlBytes, err := utils.GetXMLFromURL("https://data.bmkg.go.id/datamkg/TEWS/gempaterkini.xml")
 
 	var earthquakes models.LatestEarthquake
 	if err = xml.Unmarshal(xmlBytes, &earthquakes); err != nil {
