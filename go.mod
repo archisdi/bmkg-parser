@@ -32,12 +32,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.0.0-rc.2 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
-	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
-	golang.org/x/net v0.0.0-20201031054903-ff519b6c9102 // indirect
-	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9 // indirect
-	golang.org/x/sys v0.0.0-20201107080550-4d91cf3a1aaf // indirect
-	golang.org/x/text v0.3.4 // indirect
+	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 )
